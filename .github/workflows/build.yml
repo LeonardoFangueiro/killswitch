@@ -25,7 +25,7 @@ jobs:
       run: pyinstaller --onefile --noconsole firewall_toggle_insert.py
 
     - name: Upload EXE
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: firewall_toggle_insert
         path: dist/firewall_toggle_insert.exe
