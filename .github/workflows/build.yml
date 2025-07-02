@@ -22,7 +22,7 @@ jobs:
       run: pip install -r requirements.txt pyinstaller
 
     - name: Build EXE
-      run: pyinstaller --onefile --noconsole firewall_toggle_insert.py
+      run: pyinstaller --onefile firewall_toggle_insert.py
 
     - name: Upload EXE
       uses: actions/upload-artifact@v4
