@@ -3,15 +3,23 @@ import subprocess
 import tempfile
 
 ps1_data = """
-$adapterName = "Ethernet"
-$state = Get-NetAdapter -Name $adapterName | Select-Object -ExpandProperty Status
+$adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -or $_.Status -eq 'Disabled' }
+$enabled = $adapters | Where-Object { $_.Status -eq 'Up' }
 
-if ($state -eq "Up") {
-    Disable-NetAdapter -Name $adapterName -Confirm:$false
-    Write-Host "Internet OFF"
+if ($enabled.Count -gt 0) {
+    $enabled | ForEach-Object {
+        Disable-NetAdapter -Name $_.Name -Confirm:$false
+    }
+    Start-Sleep -Seconds 1
+    $count = ($enabled).Count
+    Write-Host "[✔] Toggle desativado: $count adaptador(es) BLOQUEADO(S)"
 } else {
-    Enable-NetAdapter -Name $adapterName -Confirm:$false
-    Write-Host "Internet ON"
+    $adapters | ForEach-Object {
+        Enable-NetAdapter -Name $_.Name -Confirm:$false
+    }
+    Start-Sleep -Seconds 1
+    $count = ($adapters).Count
+    Write-Host "[✔] Toggle ativado: $count adaptador(es) REATIVADO(S)"
 }
 """
 
